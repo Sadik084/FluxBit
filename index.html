@@ -297,14 +297,11 @@
     }
 
     function saveMockFile() {
-      const content = "FluxBit launch binaries v1.0 compiled successfully!";
-      const blob = new Blob([content], { type: 'text/plain' });
-      const url = URL.createObjectURL(blob);
+      const realFileUrl = "https://github.com/Sadik084/FluxBit/releases/download/Stable/FluxBit.exe"; 
       const link = document.createElement('a');
-      link.href = url;
-      link.download = 'fluxbit_v1.0.txt';
+      link.href = realFileUrl;
+      link.download = '';
       link.click();
-      URL.revokeObjectURL(url);
     }
   </script>
 </body>
