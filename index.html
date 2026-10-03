@@ -1,639 +1,529 @@
-<!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<!doctype html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FluxBit Download Manager</title>
-  
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-  
-  <script src="https://cdn.tailwindcss.com"></script>
-  
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['Inter', 'sans-serif'],
-            mono: ['JetBrains Mono', 'monospace'],
-          },
-          colors: {
-            flux: {
-              bg0: '#070b14',
-              bg1: '#0c1322',
-              bg2: '#111a2e',
-              bg3: '#17223b',
-              border: '#1e293b',
-              borderLight: '#334155',
-              accent: '#2563eb',
-              accentHover: '#3b82f6',
-              cyan: '#06b6d4',
-              green: '#10b981',
-              amber: '#f59e0b',
-              red: '#ef4444',
-            }
-          }
-        },
-      },
-    }
-  </script>
-  <style>
-    body {
-      background-color: #070b14;
-      color: #cbd5e1;
-    }
-    
-    .subtle-shadow {
-      box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
-    }
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#070b14">
+<title>FluxBit</title>
+<meta name="description" content="FluxBit is a fast, lightweight desktop download manager.">
 
-    .btn-2d-3d-primary {
-      background-color: #2563eb;
-      color: #ffffff;
-      border: 2px solid #3b82f6;
-      box-shadow: -3px 5px 0 0 #1d4ed8;
-      transform: translate(2px, -4px);
-      transition: transform 0.15s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.15s cubic-bezier(0.2, 0.8, 0.2, 1), background-color 0.15s ease;
-    }
-    .btn-2d-3d-primary:hover {
-      transform: translate(0, 0);
-      box-shadow: -1px 1px 0 0 #1d4ed8;
-      background-color: #1d4ed8;
-    }
-    .btn-2d-3d-primary:active {
-      transform: translate(-2px, 2px);
-      box-shadow: 0 0 0 0 #1d4ed8;
-    }
+<style>
+:root{
+  /* color palette */
+  --bg:#070b14;
+  --bg2:#0c1322;
+  --bg3:#111a2e;
+  --bg4:#17223b;
+  --line:#1e293b;
+  --line2:#334155;
+  --text:#f8fafc;
+  --muted:#94a3b8;
+  --blue:#2563eb;
+  --blue2:#3b82f6;
+  --cyan:#06b6d4;
+  --green:#10b981;
+  --amber:#f59e0b;
+  --red:#ef4444;
 
-    .btn-2d-3d-secondary {
-      background-color: #111a2e;
-      color: #cbd5e1;
-      border: 2px solid #334155;
-      box-shadow: -3px 5px 0 0 #020617;
-      transform: translate(2px, -4px);
-      transition: transform 0.15s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.15s cubic-bezier(0.2, 0.8, 0.2, 1), background-color 0.15s ease, color 0.15s ease;
-    }
-    .btn-2d-3d-secondary:hover {
-      transform: translate(0, 0);
-      box-shadow: -1px 1px 0 0 #020617;
-      background-color: #17223b;
-      color: #ffffff;
-      border-color: #475569;
-    }
-    .btn-2d-3d-secondary:active {
-      transform: translate(-2px, 2px);
-      box-shadow: 0 0 0 0 #020617;
-    }
-    
-    .custom-scroll::-webkit-scrollbar {
-      width: 6px;
-    }
-    .custom-scroll::-webkit-scrollbar-track {
-      background: #0c1322;
-    }
-    .custom-scroll::-webkit-scrollbar-thumb {
-      background: #1e293b;
-      border-radius: 4px;
-    }
-    .custom-scroll::-webkit-scrollbar-thumb:hover {
-      background: #2563eb;
-    }
-  </style>
+  --paper:#0a101d;
+  --ink:#e2e8f0;
+  --soft:#0f182e;
+  --shadow:6px 7px 0 #020617;
+  --shadow-sm:4px 4px 0 #020617;
+}
+*{box-sizing:border-box}
+
+html{scroll-behavior:smooth;cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='32' viewBox='0 0 28 32'%3E%3Cpath d='M4 2l17 17-7.5 1.5 4.2 8.3-4.1 2.1-4.2-8.4L4 29V2z' fill='%23070b14' stroke='%23f8fafc' stroke-width='2' stroke-linejoin='round'/%3E%3Cpath d='M7 7v16l3.8-3.8 4.2 8.2 1.4-.7-4.1-8.1 5.2-1.1L7 7z' fill='%233b82f6'/%3E%3C/svg%3E") 3 2,auto}
+body{
+  margin:0;
+  color:var(--text);
+  background:
+    radial-gradient(circle at 10% 8%,rgba(37,99,235,.11) 0 2px,transparent 3px),
+    radial-gradient(circle at 84% 34%,rgba(6,182,212,.08) 0 1.5px,transparent 2px),
+    linear-gradient(135deg,rgba(255,255,255,.012) 25%,transparent 25%) 0 0/8px 8px,
+    var(--bg);
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  overflow-x:hidden;
+}
+body:before{
+  content:"";position:fixed;inset:0;pointer-events:none;opacity:.10;
+  background-image:url("data:image/svg+xml,%3Csvg width='140' height='140' viewBox='0 0 140 140' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.25'/%3E%3C/svg%3E");
+}
+
+html,body,*{
+  -webkit-user-select:none;
+  user-select:none;
+  -webkit-touch-callout:none;
+}
+
+img,svg,a{
+  -webkit-user-drag:none;
+  user-drag:none;
+}
+
+a{color:inherit;text-decoration:none}
+button,.button{font:inherit;cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3E%3Cpath d='M8 4h13v8h3a3 3 0 013 3v7a4 4 0 01-4 4H12a4 4 0 01-4-4V4z' fill='%23111a2e' stroke='%23f8fafc' stroke-width='2'/%3E%3Cpath d='M11 7h7M11 11h7' stroke='%233b82f6' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E") 8 8,pointer}
+
+.wrap{width:min(1160px,calc(100% - 36px));margin:auto}
+.sketch{position:relative}
+.sketch:after{
+  content:"";position:absolute;inset:-3px -4px;border:2px solid currentColor;
+  border-radius:inherit;transform:rotate(-.7deg);pointer-events:none;opacity:.8
+}
+.eyebrow{
+  font:700 12px/1.2 ui-monospace,SFMono-Regular,Menlo,monospace;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--blue2)
+}
+.nav{
+  height:76px;display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid var(--line)
+}
+.brand{display:flex;align-items:center;gap:10px;font-weight:900;font-size:21px;letter-spacing:-.04em}
+.brand-mark{
+  width:39px;height:39px;background:var(--bg3);border:2px solid var(--line2);
+  box-shadow:3px 3px 0 #020617;display:grid;place-items:center;transform:rotate(-3deg)
+}
+.brand-mark svg{width:25px}
+.navlinks{display:flex;gap:25px;font:700 12px ui-monospace,monospace;color:var(--muted)}
+.navlinks a:hover{color:white;text-decoration:underline;text-decoration-thickness:2px}
+.hero{padding:76px 0 55px;position:relative}
+.hero-grid{display:grid;grid-template-columns:1.02fr .98fr;gap:55px;align-items:center}
+.hero h1{
+  font-size:clamp(52px,7vw,92px);line-height:.88;letter-spacing:-.075em;
+  margin:14px 0 25px;max-width:720px
+}
+.hero h1 .blue{color:var(--blue2);display:inline-block;transform:rotate(-2deg)}
+.hero-copy{font-size:18px;line-height:1.55;color:var(--muted);max-width:610px}
+.actions{display:flex;gap:14px;flex-wrap:wrap;margin-top:30px}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;min-height:49px;padding:0 20px;
+  border:2px solid var(--line2);font-weight:900;box-shadow:var(--shadow-sm);
+  transition:.15s transform,.15s box-shadow,.15s background
+}
+.btn:hover{transform:translate(3px,3px);box-shadow:1px 1px 0 #020617}
+.btn.primary{background:var(--blue);color:white;border-color:var(--blue2)}
+.btn.primary:hover{background:#1d4ed8}
+.btn.secondary{background:var(--bg3);color:#cbd5e1}
+.note{
+  display:inline-block;margin:23px 0 0 12px;font:700 12px ui-monospace,monospace;
+  transform:rotate(-3deg);color:var(--cyan)
+}
+.hero-art{position:relative;min-height:470px;display:grid;place-items:center}
+.doodle-window{
+  width:min(500px,100%);background:var(--bg2);border:2px solid var(--line2);
+  border-radius:13px;box-shadow:10px 11px 0 #020617;transform:rotate(1.2deg);overflow:hidden
+}
+.window-top{
+  height:45px;border-bottom:1px solid var(--line);display:flex;align-items:center;
+  gap:7px;padding:0 13px;background:var(--bg)
+}
+.dot{width:11px;height:11px;border:2px solid #020617;border-radius:50%}
+.dot.red{background:var(--red)}.dot.yellow{background:var(--amber)}.dot.green{background:var(--green)}
+.window-title{margin:auto;font:800 11px ui-monospace,monospace;color:#cbd5e1}
+.app-body{display:grid;grid-template-columns:125px 1fr;min-height:340px}
+.side{
+  background:#090e1a;border-right:1px solid var(--line);padding:15px 10px;
+  font:800 10px ui-monospace,monospace;color:#94a3b8
+}
+.side div{padding:10px 8px;border:1px solid transparent;margin-bottom:4px}
+.side .sel{
+  background:var(--blue);color:#fff;border-color:var(--blue2);
+  box-shadow:3px 3px 0 #020617
+}
+.panel{padding:17px}
+.panel-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.panel-head b{font-size:17px}.tiny{font:700 9px ui-monospace,monospace;color:var(--muted)}
+.task{
+  border:1px solid var(--line2);padding:13px;margin-bottom:11px;background:var(--soft);
+  box-shadow:3px 3px 0 #020617
+}
+.task .row{display:flex;justify-content:space-between;gap:10px;font:800 10px ui-monospace,monospace}
+.progress{height:8px;border:1px solid var(--line2);margin:12px 0 8px;background:#070b14}
+.progress i{display:block;width:68%;height:100%;background:var(--blue)}
+.meta{
+  font:700 9px ui-monospace,monospace;color:var(--muted);
+  display:flex;justify-content:space-between
+}
+.floating{
+  position:absolute;border:1px solid var(--blue2);background:#0b1833;color:#93c5fd;
+  padding:10px 14px;font:900 11px ui-monospace,monospace;
+  box-shadow:4px 4px 0 #020617;transform:rotate(-7deg);right:-6px;top:30px
+}
+.floating.two{
+  background:#102b2a;color:#6ee7b7;border-color:#10b981;left:-5px;bottom:45px;
+  right:auto;transform:rotate(5deg)
+}
+.tape{
+  position:absolute;width:100px;height:27px;background:rgba(37,99,235,.22);
+  border:1px solid rgba(59,130,246,.35);transform:rotate(7deg);top:-14px;left:42%;z-index:2
+}
+.section{padding:82px 0;border-top:1px dashed var(--line2)}
+.section-head{display:flex;justify-content:space-between;gap:25px;align-items:end;margin-bottom:38px}
+.section h2{font-size:clamp(37px,5vw,62px);letter-spacing:-.06em;line-height:.92;margin:7px 0 0}
+.section-intro{max-width:470px;color:var(--muted);line-height:1.6}
+.features{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.card{
+  background:var(--bg2);border:1px solid var(--line2);padding:25px;min-height:220px;
+  box-shadow:var(--shadow);border-radius:10px;transform:rotate(var(--r))
+}
+.card:nth-child(1){--r:-1deg}.card:nth-child(2){--r:.8deg}.card:nth-child(3){--r:-.4deg}
+.card:nth-child(4){--r:.7deg}.card:nth-child(5){--r:-.7deg}.card:nth-child(6){--r:.4deg}
+.card:hover{transform:rotate(0) translateY(-4px);border-color:#475569}
+.icon{
+  width:49px;height:49px;border:1px solid var(--line2);display:grid;place-items:center;
+  background:var(--bg3);margin-bottom:20px;box-shadow:3px 3px 0 #020617
+}
+.icon svg{width:28px;height:28px;fill:none;stroke:var(--blue2);stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+.card h3{font-size:21px;margin:0 0 8px;letter-spacing:-.03em}.card p{margin:0;color:var(--muted);line-height:1.55;font-size:14px}
+.arch{display:grid;grid-template-columns:1fr 1fr;gap:35px;align-items:center}
+.blueprint{
+  background:#0a1527;border:2px solid #31506f;padding:28px;
+  box-shadow:9px 9px 0 #020617;position:relative
+}
+.blueprint:before{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(rgba(37,99,235,.08) 1px,transparent 1px),
+             linear-gradient(90deg,rgba(37,99,235,.08) 1px,transparent 1px);
+  background-size:24px 24px;pointer-events:none
+}
+.flow{position:relative;display:grid;gap:12px}
+.flowbox{
+  background:var(--bg2);border:1px solid var(--line2);padding:15px;
+  display:flex;justify-content:space-between;align-items:center;
+  box-shadow:3px 3px 0 #020617;font-weight:900
+}
+.flowbox small{font:700 10px ui-monospace,monospace;color:var(--muted)}
+.arrow{text-align:center;font:900 20px ui-monospace,monospace;color:var(--blue2)}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:20px}
+.chip{
+  border:1px solid var(--line2);padding:7px 10px;background:var(--bg3);
+  font:800 10px ui-monospace,monospace;box-shadow:2px 2px 0 #020617;color:#cbd5e1
+}
+.download-band{
+  background:var(--bg2);color:white;border:2px solid var(--line2);
+  box-shadow:9px 9px 0 #020617;padding:40px;display:flex;align-items:center;
+  justify-content:space-between;gap:30px;transform:rotate(-.6deg)
+}
+.download-band h2{margin:0;font-size:clamp(35px,5vw,58px);letter-spacing:-.06em;line-height:.9}
+.download-band p{color:var(--muted);max-width:500px;line-height:1.5}
+.download-band .btn{background:var(--blue);color:#fff;border-color:var(--blue2)}
+.install{display:grid;grid-template-columns:.8fr 1.2fr;gap:35px}
+.steps{display:grid;gap:14px}
+.step{display:grid;grid-template-columns:48px 1fr;gap:15px;align-items:start}
+.num{
+  width:40px;height:40px;border:1px solid var(--blue2);background:#102044;color:#93c5fd;
+  display:grid;place-items:center;font-weight:900;box-shadow:3px 3px 0 #020617;transform:rotate(-4deg)
+}
+.step h3{margin:0 0 4px}.step p{margin:0;color:var(--muted);font-size:14px;line-height:1.5}
+footer{
+  border-top:1px solid var(--line);padding:35px 0 45px;font:700 11px ui-monospace,monospace;
+  color:var(--muted);display:flex;justify-content:space-between;gap:20px
+}
+footer a:hover{color:white}
+@media(max-width:850px){
+  .hero-grid,.arch,.install{grid-template-columns:1fr}
+  .hero{padding-top:45px}.hero-art{min-height:390px}.features{grid-template-columns:1fr 1fr}
+  .navlinks{display:none}.section{padding:62px 0}
+}
+@media(max-width:560px){
+  .wrap{width:min(100% - 24px,1160px)}.hero h1{font-size:56px}
+  .features{grid-template-columns:1fr}.app-body{grid-template-columns:95px 1fr}
+  .side{font-size:8px}.panel{padding:10px}.download-band{padding:28px 22px;display:block}
+  .download-band .btn{margin-top:20px}.section-head{display:block}
+  .section-intro{margin-top:15px}.floating{right:0}.floating.two{left:0}
+}
+</style>
 </head>
-<body class="selection:bg-blue-600 selection:text-white overflow-x-hidden min-h-screen flex flex-col justify-between font-sans">
 
-  <!-- Navigation Header -->
-  <header class="border-b border-flux-border bg-[#070b14]/90 backdrop-blur-md sticky top-0 z-50">
-    <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-      <a href="#" class="flex items-center gap-3 group">
-        <div class="w-8 h-8 bg-flux-bg2 border border-flux-border rounded-lg flex items-center justify-center group-hover:border-slate-600 transition">
-          <svg viewBox="0 0 100 100" class="w-5 h-5">
-            <polygon points="25,20 80,20 70,35 25,35" fill="#3b82f6" />
-            <polygon points="25,45 60,45 50,60 25,60" fill="#2563eb" />
-            <polygon points="25,20 40,20 40,65 55,65 32,90 10,65 25,65" fill="#60a5fa" />
-          </svg>
-        </div>
-        <span class="text-base font-bold text-white tracking-tight">FluxBit</span>
-      </a>
-    </div>
-  </header>
+<body>
+<script>
+const FLUXBIT_LINKS = {
+  download: "https://github.com/Sadik084/FluxBit/releases/download/v4.1.0/FluxBit-Setup-4.1.0.exe",
+  release: "https://github.com/Sadik084/FluxBit/releases",
+  extension: "https://github.com/Sadik084/FluxBit/releases/download/v4.1.0/fluxbit-extension.zip"
+};
+</script>
 
-  <!-- Hero Section -->
-  <main class="max-w-4xl mx-auto px-6 py-12 md:py-20 text-center relative z-10">
-    
-    <!-- Hero Icon Wrapper -->
-    <div class="flex justify-center mb-6">
-      <div class="w-20 h-20 bg-flux-bg2 border border-flux-border rounded-2xl flex items-center justify-center relative shadow-lg">
-        <span class="absolute -top-2 -right-2 bg-blue-600 text-white font-mono font-bold text-[10px] px-2 py-0.5 rounded-full">
-          v4.0.0
-        </span>
-        <svg viewBox="0 0 100 100" class="w-12 h-12">
-          <polygon points="25,20 80,20 70,35 25,35" fill="#3b82f6" />
-          <polygon points="25,45 60,45 50,60 25,60" fill="#2563eb" />
-          <polygon points="25,20 40,20 40,65 55,65 32,90 10,65 25,65" fill="#60a5fa" />
-        </svg>
-      </div>
-    </div>
+<header class="wrap nav">
+  <a class="brand" href="#">
+    <span class="brand-mark">
+      <svg viewBox="0 0 100 100">
+        <path d="M18 16h65L72 32H18zM18 42h42L50 58H18zM18 16h17v50h18L31 88 10 66h8z" fill="#60a5fa"/>
+      </svg>
+    </span>
+    FluxBit
+  </a>
 
-    <!-- Main Headline -->
-    <h1 class="text-3xl md:text-5xl font-extrabold text-white tracking-tight leading-tight max-w-3xl mx-auto">
-      Fast, lightweight, and precise download manager.
-    </h1>
+  <nav class="navlinks">
+    <a href="#features">FEATURES</a>
+    <a href="#engine">ENGINE</a>
+    <a href="#install">GET IT</a>
+  </nav>
+</header>
 
-    <p class="mt-4 text-sm md:text-base text-slate-400 max-w-xl mx-auto leading-relaxed">
-      FluxBit v4.0.0 delivers optimal transfer speeds, low resource usage, and clean, streamlined task management.
+<main>
+
+<section class="hero">
+<div class="wrap hero-grid">
+  <div>
+    <div class="eyebrow">Desktop download manager · v4.0.0</div>
+    <h1>Fast, lightweight,<br><span class="blue">precise.</span></h1>
+    <p class="hero-copy">
+      FluxBit is a focused Windows download manager built for high-speed transfers,
+      resumable downloads, segmented HTTP(S), and native BitTorrent support.
     </p>
 
-    <!-- Download CTA Group -->
-    <div id="download" class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
-      <a href="https://github.com/Sadik084/FluxBit/releases/download/v4.0.0/FluxBit-Setup-4.0.0.exe" class="w-full sm:w-auto text-white font-bold px-7 py-3 rounded-xl btn-2d-3d-primary text-xs uppercase tracking-wider flex items-center justify-center">
-        Download
-      </a>
-      <button onclick="downloadExtensionModal()" class="w-full sm:w-auto text-slate-200 font-semibold px-6 py-3 rounded-xl btn-2d-3d-secondary text-xs flex items-center justify-center gap-2">
-        <span>🔌</span> Chrome Extension
-      </button>
-      <a href="https://github.com/Sadik084/FluxBit/releases/tag/v4.0.0" target="_blank" class="w-full sm:w-auto text-slate-400 font-semibold px-5 py-3 rounded-xl btn-2d-3d-secondary text-xs text-center">
-        GitHub Release
-      </a>
+    <div class="actions">
+      <a class="btn primary js-download" href="#">↓ DOWNLOAD FOR WINDOWS</a>
+      <a class="btn secondary js-release" href="#">VIEW RELEASE ↗</a>
     </div>
 
-  </main>
+    <span class="note">no bloat. just the bits.</span>
+  </div>
 
-  <!-- Interactive App Preview (Matching v4.0.0 Desktop UI Screenshot) -->
-  <section id="demo" class="border-t border-flux-border bg-[#050810] py-16">
-    <div class="max-w-6xl mx-auto px-4 md:px-6">
-      
-      <div class="text-center mb-8">
-        <span class="text-xs font-mono font-semibold text-slate-300 uppercase tracking-widest bg-slate-900 border border-slate-700 px-3 py-1 rounded-full">
-          v4.0.0 Interface Preview
-        </span>
-        <p class="text-xs text-slate-400 mt-3 max-w-md mx-auto">Explore the updated sidebar layout, compact task items, and detailed transfer panels.</p>
+  <div class="hero-art">
+    <div class="floating">HIGH SPEED<br>TRANSFER</div>
+    <div class="floating two">HTTP + TORRENT<br>ONE APP</div>
+
+    <div class="doodle-window">
+      <div class="tape"></div>
+
+      <div class="window-top">
+        <span class="dot red"></span>
+        <span class="dot yellow"></span>
+        <span class="dot green"></span>
+        <span class="window-title">FluxBit / Downloads</span>
       </div>
 
-      <!-- App Frame Window (Replicating exact v4 desktop app design) -->
-      <div class="bg-flux-bg1 border border-flux-border rounded-xl overflow-hidden subtle-shadow">
-        
-        <!-- App Titlebar Header -->
-        <div class="bg-flux-bg0 border-b border-flux-border px-4 py-2 flex items-center justify-between text-xs select-none">
-          <div class="flex items-center gap-2">
-            <span class="text-xs text-slate-300 font-semibold flex items-center gap-2">
-              <svg viewBox="0 0 100 100" class="w-3.5 h-3.5 inline-block">
-                <polygon points="25,20 80,20 70,35 25,35" fill="#3b82f6" />
-                <polygon points="25,45 60,45 50,60 25,60" fill="#2563eb" />
-                <polygon points="25,20 40,20 40,65 55,65 32,90 10,65 25,65" fill="#60a5fa" />
-              </svg>
-              FluxBit
-            </span>
-          </div>
-          <div class="flex items-center gap-3 text-[11px] text-slate-400 font-mono">
-            <span class="w-2.5 h-2.5 rounded-sm hover:bg-slate-700 inline-block text-center leading-none text-slate-500">─</span>
-            <span class="w-2.5 h-2.5 rounded-sm hover:bg-slate-700 inline-block text-center leading-none text-slate-500">□</span>
-            <span class="w-2.5 h-2.5 rounded-sm hover:bg-red-700 inline-block text-center leading-none text-slate-400">✕</span>
-          </div>
-        </div>
+      <div class="app-body">
+        <aside class="side">
+          <div class="sel">ALL DOWNLOADS</div>
+          <div>ACTIVE</div>
+          <div>QUEUED</div>
+          <div>COMPLETED</div>
+          <div>TORRENTS</div>
+          <br>
+          <div>SETTINGS</div>
+        </aside>
 
-        <!-- Desktop App Main Grid -->
-        <div class="grid grid-cols-1 lg:grid-cols-5 min-h-[500px]">
-          
-          <!-- Sidebar Navigation -->
-          <div class="lg:col-span-1 bg-[#090e1a] border-r border-flux-border p-3 flex flex-col justify-between">
-            <div class="space-y-1 text-xs">
-              <button onclick="switchCategory('all')" id="cat-all" class="w-full text-left px-3 py-2 rounded-lg font-medium bg-blue-600 text-white flex items-center justify-between transition-all">
-                <span>All Downloads</span>
-              </button>
-              <button onclick="switchCategory('active')" id="cat-active" class="w-full text-left px-3 py-2 rounded-lg font-medium text-slate-400 hover:text-white hover:bg-flux-bg2 flex items-center justify-between transition-all">
-                <span>Active Queue</span>
-              </button>
-              <button onclick="switchCategory('queued')" id="cat-queued" class="w-full text-left px-3 py-2 rounded-lg font-medium text-slate-400 hover:text-white hover:bg-flux-bg2 flex items-center justify-between transition-all">
-                <span>Queued</span>
-              </button>
-              <button onclick="switchCategory('completed')" id="cat-completed" class="w-full text-left px-3 py-2 rounded-lg font-medium text-slate-400 hover:text-white hover:bg-flux-bg2 flex items-center justify-between transition-all">
-                <span>Completed</span>
-              </button>
-              <button onclick="switchCategory('torrents')" id="cat-torrents" class="w-full text-left px-3 py-2 rounded-lg font-medium text-slate-400 hover:text-white hover:bg-flux-bg2 flex items-center justify-between transition-all">
-                <span>Seeding / Torrents</span>
-              </button>
+        <div class="panel">
+          <div class="panel-head">
+            <b>All Downloads</b>
+            <span class="tiny">2 CONNECTIONS</span>
+          </div>
+
+          <div class="task">
+            <div class="row">
+              <span>large-file.bin</span>
+              <span style="color:#60a5fa">DOWNLOADING</span>
             </div>
-
-            <div class="pt-4 border-t border-flux-border/60 space-y-1 text-xs">
-              <button onclick="openSettingsDemo()" class="w-full text-left px-3 py-2 rounded-lg font-medium text-slate-400 hover:text-white hover:bg-flux-bg2 border border-flux-border/40 text-center transition">
-                Settings
-              </button>
-              <button onclick="alert('FluxBit is up to date (v4.0.0).')" class="w-full text-left px-3 py-2 rounded-lg font-medium text-slate-400 hover:text-white hover:bg-flux-bg2 border border-flux-border/40 text-center transition">
-                Check for Updates
-              </button>
-              <div class="text-[10px] font-mono text-slate-500 text-right pr-2 pt-1">V4</div>
+            <div class="progress"><i></i></div>
+            <div class="meta">
+              <span>6.8 GB / 10.0 GB</span>
+              <span>117 MB/s · 31s</span>
             </div>
           </div>
 
-          <!-- Main Workspace -->
-          <div class="lg:col-span-4 bg-[#0a101f] p-5 flex flex-col justify-between">
-            
-            <div>
-              <!-- Section Header & Filter Toolbar -->
-              <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4">
-                <h3 class="text-xl font-bold text-white">All Downloads</h3>
-                
-                <!-- Action Controls Toolbar -->
-                <div class="flex flex-wrap items-center gap-2 text-xs w-full sm:w-auto">
-                  <div class="flex items-center bg-flux-bg2 border border-flux-border rounded-lg px-2 py-1 text-slate-300">
-                    <span class="mr-1">📁</span>
-                    <select class="bg-transparent text-xs focus:outline-none text-slate-200">
-                      <option>Downloads</option>
-                      <option>Documents</option>
-                    </select>
-                  </div>
-
-                  <div class="relative flex-1 sm:w-44">
-                    <input type="text" id="app-search" placeholder="Search..." class="w-full bg-flux-bg2 border border-flux-border rounded-lg px-2.5 py-1 text-xs text-slate-200 focus:outline-none focus:border-blue-500">
-                  </div>
-
-                  <div class="bg-flux-bg2 border border-flux-border rounded-lg px-2.5 py-1 text-slate-300">
-                    <span>⇅ Sort: Date</span>
-                  </div>
-
-                  <div class="bg-flux-bg2 border border-flux-border rounded-lg px-2.5 py-1 text-slate-300">
-                    <span>⊞ View: Compact</span>
-                  </div>
-
-                  <button onclick="promptAddLink()" class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-3 py-1 rounded-lg transition">
-                    + New
-                  </button>
-                </div>
-              </div>
-
-              <!-- Downloads List Container -->
-              <div class="space-y-3 mb-6" id="tasks-container">
-                
-                <!-- Active Download Item (Matching v4 screenshot) -->
-                <div class="bg-[#0f182e] border border-flux-border rounded-lg p-3 text-xs shadow-sm transition hover:border-slate-600" id="task-card-1">
-                  <div class="flex items-center justify-between mb-1.5">
-                    <div class="flex items-center gap-2">
-                      <input type="checkbox" class="rounded bg-flux-bg0 border-flux-border">
-                      <span class="text-slate-400">📄</span>
-                      <span class="font-bold text-white font-mono">1GB.bin</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                      <span class="text-[10px] font-mono text-blue-400 bg-blue-950/60 border border-blue-500/30 px-2 py-0.5 rounded">Normal downloading</span>
-                    </div>
-                  </div>
-
-                  <!-- Thin Progress Line -->
-                  <div class="w-full bg-flux-bg0 h-1.5 rounded-full overflow-hidden mb-2">
-                    <div id="v4-pbar" class="bg-blue-500 h-full rounded-full transition-all duration-300" style="width: 28%;"></div>
-                  </div>
-
-                  <div class="flex flex-wrap items-center justify-between text-[11px] font-mono text-slate-400">
-                    <span id="v4-meta">8.6 MB / 1.0 GB • 117 MB/s • ETA 8s • 2 conn</span>
-                    <div class="flex items-center gap-3">
-                      <button onclick="toggleV4Pause()" id="v4-pause-btn" class="hover:text-white transition">Pause</button>
-                      <button onclick="cancelV4Task()" class="text-slate-200 font-bold hover:text-red-400 transition">Cancel</button>
-                      <button onclick="removeV4Task()" class="hover:text-white transition">Remove</button>
-                    </div>
-                  </div>
-                </div>
-
-              </div>
-
-              <!-- Detailed Task Section (v4 Feature Highlight) -->
-              <div class="bg-[#0e162a] border border-flux-border rounded-lg p-4 text-xs">
-                
-                <div class="flex items-center justify-between border-b border-flux-border pb-3 mb-3">
-                  <div class="flex items-center gap-2">
-                    <span class="text-slate-400">📄</span>
-                    <div>
-                      <h4 class="font-bold text-white font-mono text-sm">1GB.bin</h4>
-                      <p class="text-[10px] font-mono text-slate-400">C:/Users/nothing/Downloads/1GB.bin</p>
-                    </div>
-                  </div>
-                  <div class="flex items-center gap-2">
-                    <button onclick="alert('Opening download folder...')" class="bg-flux-bg2 hover:bg-flux-bg3 border border-flux-border text-slate-200 px-3 py-1 rounded text-xs transition">
-                      Open Folder
-                    </button>
-                    <button class="text-slate-500 hover:text-white text-sm px-1">✕</button>
-                  </div>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <!-- Details Tab Content -->
-                  <div class="md:col-span-2 bg-flux-bg0 border border-flux-border/60 rounded-lg p-3 space-y-2">
-                    <div class="flex gap-4 border-b border-flux-border pb-2 text-xs">
-                      <span class="text-blue-400 font-semibold border-b-2 border-blue-500 pb-1 cursor-pointer">Details</span>
-                      <span class="text-slate-400 hover:text-slate-200 cursor-pointer">Connections</span>
-                    </div>
-                    
-                    <div class="space-y-1.5 text-[11px] font-mono text-slate-300 pt-1">
-                      <div>
-                        <span class="text-slate-500 block">Source page</span>
-                        <a href="https://sin-speed.hetzner.com/1GB.bin" target="_blank" class="text-blue-400 hover:underline break-all">https://sin-speed.hetzner.com/1GB.bin</a>
-                      </div>
-                      <div>
-                        <span class="text-slate-500 block">Direct download link</span>
-                        <a href="https://sin-speed.hetzner.com/1GB.bin" target="_blank" class="text-blue-400 hover:underline break-all">https://sin-speed.hetzner.com/1GB.bin</a>
-                      </div>
-                      <div class="text-slate-400 pt-1">
-                        Size: <span class="text-slate-200">1.0 GB</span> • Added: <span class="text-slate-200">2026-09-01 13:01</span> • Type: <span class="text-slate-200">application/octet-stream</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- Transfer Status Widget -->
-                  <div class="bg-flux-bg0 border border-flux-border/60 rounded-lg p-3 flex flex-col justify-between">
-                    <div>
-                      <span class="text-[11px] font-bold text-slate-300 block mb-2">Transfer status</span>
-                      <div class="w-full bg-flux-bg1 h-2 rounded-full overflow-hidden mb-2">
-                        <div id="status-widget-pbar" class="bg-blue-500 h-full rounded-full" style="width: 28%;"></div>
-                      </div>
-                      <div class="flex items-center justify-between text-[11px] font-mono mb-2">
-                        <span id="status-widget-speed" class="text-slate-300">↓ 117 MB/s</span>
-                        <span class="text-blue-400 text-[10px]">Normal</span>
-                      </div>
-                    </div>
-
-                    <div class="flex items-center justify-between pt-2">
-                      <button onclick="toggleV4Pause()" class="bg-flux-bg2 hover:bg-flux-bg3 border border-flux-border text-slate-200 px-3 py-1 rounded text-[11px]">
-                        Pause
-                      </button>
-                      <button onclick="cancelV4Task()" class="bg-red-600 hover:bg-red-500 text-white font-semibold px-3 py-1 rounded text-[11px]">
-                        Cancel
-                      </button>
-                      <button class="text-slate-500 hover:text-white px-1">⋮</button>
-                    </div>
-                  </div>
-                </div>
-
-              </div>
-
+          <div class="task">
+            <div class="row">
+              <span>ubuntu.torrent</span>
+              <span style="color:#10b981">SEEDING</span>
             </div>
-
-            <!-- Client Footer Bar -->
-            <div class="border-t border-flux-border pt-3 mt-4 flex items-center justify-between text-[10px] font-mono text-slate-500">
-              <span>FluxBit Engine v4.0.0</span>
-              <span>Status: Active</span>
+            <div class="progress">
+              <i style="width:100%;background:#10b981"></i>
             </div>
-
+            <div class="meta">
+              <span>100%</span><span>8 peers</span>
+            </div>
           </div>
 
-        </div>
-
-      </div>
-
-    </div>
-  </section>
-
-  <!-- Release Changelog Section -->
-  <section id="changelog" class="border-t border-flux-border bg-[#070b14] py-16">
-    <div class="max-w-4xl mx-auto px-6">
-      
-      <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 pb-4 border-b border-flux-border">
-        <div>
-          <span class="text-xs font-mono font-semibold text-blue-400 uppercase tracking-widest">Version Release</span>
-          <h2 class="text-2xl font-bold text-white mt-1">FluxBit v4.0.0 Changelog</h2>
-        </div>
-        <div class="mt-2 md:mt-0 font-mono text-xs text-slate-400">
-          Target Tag: <a href="https://github.com/Sadik084/FluxBit/releases/tag/v4.0.0" target="_blank" class="text-blue-400 hover:underline">v4.0.0</a>
-        </div>
-      </div>
-
-      <div class="bg-flux-bg1 border border-flux-border rounded-xl p-6 md:p-8 space-y-6">
-        <div>
-          <h3 class="text-lg font-bold text-white mb-2">FluxBit v4.0.0</h3>
-          <p class="text-sm text-slate-300 leading-relaxed">
-            A major core update for stability and performance. Rebuilt backend components ensure smoother overall transfers and accurate resource handling.
-          </p>
-        </div>
-
-        <div>
-          <h4 class="text-xs font-mono font-bold text-slate-400 uppercase tracking-wider mb-3">Changelog Highlights</h4>
-          <ul class="space-y-2.5 text-xs text-slate-300">
-            <li class="flex items-start gap-2">
-              <span class="text-blue-400 font-bold">•</span>
-              <div><strong class="text-white">Bug Fixes:</strong> Fixed connection and stability issues.</div>
-            </li>
-            <li class="flex items-start gap-2">
-              <span class="text-blue-400 font-bold">•</span>
-              <div><strong class="text-white">Core Upgrade:</strong> Upgraded core architecture for higher speed and lower latency.</div>
-            </li>
-            <li class="flex items-start gap-2">
-              <span class="text-blue-400 font-bold">•</span>
-              <div><strong class="text-white">Engine Tuning:</strong> Improved HTTP and Torrent accuracy.</div>
-            </li>
-            <li class="flex items-start gap-2">
-              <span class="text-blue-400 font-bold">•</span>
-              <div><strong class="text-white">Task Control:</strong> Added detailed task view inspector.</div>
-            </li>
-            <li class="flex items-start gap-2">
-              <span class="text-blue-400 font-bold">•</span>
-              <div><strong class="text-white">UI Updates:</strong> Modernized interface layout and design elements.</div>
-            </li>
-            <li class="flex items-start gap-2">
-              <span class="text-blue-400 font-bold">•</span>
-              <div><strong class="text-white">Easy Extension Access:</strong> Download extension directly from settings panel.</div>
-            </li>
-          </ul>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- Features Section -->
-  <section id="features" class="border-t border-flux-border bg-[#050810] py-16">
-    <div class="max-w-4xl mx-auto px-6">
-      
-      <div class="text-center mb-10">
-        <h2 class="text-xs font-bold tracking-widest text-slate-400 uppercase">Engine Specs</h2>
-        <p class="text-xl font-bold text-white mt-1">Built for speed and clean user experience</p>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-        
-        <div class="bg-flux-bg1 border border-flux-border p-5 rounded-xl hover:border-slate-600 transition duration-200">
-          <div class="w-8 h-8 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center text-blue-400 text-sm mb-3 font-mono font-bold">
-            🚀
+          <div class="task">
+            <div class="row">
+              <span>archive.zip</span>
+              <span style="color:#f59e0b">PAUSED</span>
+            </div>
+            <div class="progress">
+              <i style="width:41%;background:#f59e0b"></i>
+            </div>
+            <div class="meta">
+              <span>1.2 GB / 2.9 GB</span><span>Resume</span>
+            </div>
           </div>
-          <h3 class="text-sm font-bold text-white mb-1">High-Performance Core</h3>
-          <p class="text-xs text-slate-400 leading-relaxed">
-            Optimized architecture maintains low CPU and memory usage even under maximum bandwidth load.
-          </p>
         </div>
-
-        <div class="bg-flux-bg1 border border-flux-border p-5 rounded-xl hover:border-slate-600 transition duration-200">
-          <div class="w-8 h-8 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-300 text-sm mb-3 font-mono font-bold">
-            📊
-          </div>
-          <h3 class="text-sm font-bold text-white mb-1">Detailed Task View</h3>
-          <p class="text-xs text-slate-400 leading-relaxed">
-            Inspect source URLs, saved file paths, byte sizes, and active connection limits directly in a clean inspector panel.
-          </p>
-        </div>
-
-        <div class="bg-flux-bg1 border border-flux-border p-5 rounded-xl hover:border-slate-600 transition duration-200">
-          <div class="w-8 h-8 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-300 text-sm mb-3 font-mono font-bold">
-            ⚙️
-          </div>
-          <h3 class="text-sm font-bold text-white mb-1">Settings Integration</h3>
-          <p class="text-xs text-slate-400 leading-relaxed">
-            Easily grab browser extensions directly inside the app settings menu without searching external sites.
-          </p>
-        </div>
-
-      </div>
-
-    </div>
-  </section>
-
-  <!-- Extension Guide Section / Modal -->
-  <section id="install" class="border-t border-flux-border bg-flux-bg0 py-16">
-    <div class="max-w-3xl mx-auto px-6 text-center">
-      <h2 class="text-2xl font-bold text-white mb-2">Install Extension</h2>
-      <p class="text-xs text-slate-400 mb-6">Integrate FluxBit with Google Chrome in two simple steps.</p>
-
-      <div class="bg-flux-bg1 border border-flux-border rounded-xl p-6 text-left max-w-xl mx-auto space-y-4 font-mono text-xs">
-        <div class="flex gap-3">
-          <span class="text-blue-400 font-bold">1.</span>
-          <p class="text-slate-300 leading-relaxed">
-            Open <span class="text-white bg-slate-800 px-1.5 py-0.5 rounded select-all font-semibold">chrome://extensions/</span> in Chrome and turn on <strong class="text-white">Developer mode</strong> (top-right).
-          </p>
-        </div>
-        <div class="flex gap-3 border-t border-flux-border/60 pt-4">
-          <span class="text-blue-400 font-bold">2.</span>
-          <p class="text-slate-300 leading-relaxed">
-            Drag and drop the <span class="text-white font-semibold">.zip</span> file directly anywhere onto that page to install it.
-          </p>
-        </div>
-      </div>
-
-      <div class="mt-6 flex justify-center">
-        <button onclick="downloadExtensionModal()" class="text-white text-xs font-bold px-6 py-2.5 rounded-lg btn-2d-3d-primary">
-          Download Extension (.zip)
-        </button>
       </div>
     </div>
-  </section>
+  </div>
+</div>
+</section>
 
-  <!-- Interactive Extension Modal Window -->
-  <div id="extension-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-[100] hidden opacity-0 transition-opacity duration-200 px-4">
-    <div class="bg-flux-bg1 border border-flux-border max-w-md w-full rounded-xl overflow-hidden shadow-2xl transform scale-95 transition-transform duration-200" id="modal-card">
-      
-      <div class="border-b border-flux-border bg-flux-bg2 px-5 py-3 flex items-center justify-between">
-        <div class="flex items-center gap-2">
-          <span>🔌</span>
-          <h3 class="text-xs font-bold text-white">Extension Download</h3>
-        </div>
-        <button onclick="closeModal()" class="text-slate-400 hover:text-white transition text-xs p-1">✕</button>
-      </div>
+<section id="features" class="section">
+<div class="wrap">
+  <div class="section-head">
+    <div>
+      <div class="eyebrow">Built for the transfer</div>
+      <h2>Small app.<br>Serious engine.</h2>
+    </div>
+    <p class="section-intro">
+      A compact interface around the parts that matter: fast transfers, resumability,
+      task control, connection management, and a clean Windows experience.
+    </p>
+  </div>
 
-      <div class="p-6">
-        <p class="text-xs text-slate-300 mb-4">Downloading <strong class="text-white">fluxbit-extension.zip</strong> (v4.0.0)...</p>
-        
-        <div class="bg-flux-bg0 border border-flux-border p-4 rounded-lg space-y-3 font-mono text-xs mb-6">
-          <p class="text-slate-300"><strong class="text-blue-400">Step 1:</strong> Go to <span class="text-white bg-slate-800 px-1 rounded">chrome://extensions/</span> and enable Developer Mode.</p>
-          <p class="text-slate-300"><strong class="text-blue-400">Step 2:</strong> Drag and drop the downloaded ZIP file into Chrome.</p>
-        </div>
+  <div class="features">
+    <article class="card">
+      <div class="icon"><svg viewBox="0 0 24 24"><path d="M4 18h16M5 15l4-5 3 3 6-8"/><path d="M15 5h3v3"/></svg></div>
+      <h3>Multi-segment HTTP</h3>
+      <p>Large HTTP(S) transfers can be split into byte ranges and downloaded concurrently for high throughput.</p>
+    </article>
 
-        <button onclick="closeModal()" class="w-full text-white font-bold py-2 rounded-lg btn-2d-3d-primary text-xs">
-          Got it
-        </button>
-      </div>
-      
+    <article class="card">
+      <div class="icon"><svg viewBox="0 0 24 24"><path d="M5 4v16M19 4v16M5 8h14M5 16h14"/></svg></div>
+      <h3>Resume built in</h3>
+      <p>Transfer state is retained so interrupted downloads can continue without unnecessarily starting again.</p>
+    </article>
+
+    <article class="card">
+      <div class="icon"><svg viewBox="0 0 24 24"><path d="M12 3v18M3 12h18"/><circle cx="12" cy="12" r="8"/></svg></div>
+      <h3>BitTorrent</h3>
+      <p>Native torrent downloading with task, peer and seeding controls inside the same desktop application.</p>
+    </article>
+
+    <article class="card">
+      <div class="icon"><svg viewBox="0 0 24 24"><path d="M4 7h16M7 4v6M17 14v6M4 17h16"/><path d="M10 14h4"/></svg></div>
+      <h3>Smart retries</h3>
+      <p>Recoverable transfer failures can be retried while the download engine manages connection activity.</p>
+    </article>
+
+    <article class="card">
+      <div class="icon"><svg viewBox="0 0 24 24"><path d="M6 4h12v16H6z"/><path d="M9 8h6M9 12h6M9 16h4"/></svg></div>
+      <h3>Task inspector</h3>
+      <p>See useful task information such as source links, saved paths, sizes, progress, speeds and connection data.</p>
+    </article>
+
+    <article class="card">
+      <div class="icon"><svg viewBox="0 0 24 24"><path d="M5 9V5h4M19 9V5h-4M5 15v4h4M19 15v4h-4"/><path d="M9 5l3 3 3-3M9 19l3-3 3 3"/></svg></div>
+      <h3>Tray + browser bridge</h3>
+      <p>Keep FluxBit running quietly and use its browser integration to hand supported links to the desktop app.</p>
+    </article>
+  </div>
+</div>
+</section>
+
+<section id="engine" class="section">
+<div class="wrap arch">
+  <div>
+    <div class="eyebrow">Under the sketch</div>
+    <h2>Focused on<br>the transfer.</h2>
+    <p class="section-intro">
+      The interface stays compact while transfer work happens in the background.
+      HTTP downloads use segmented asynchronous work, while torrent tasks use the
+      native torrent engine.
+    </p>
+
+    <div class="chips">
+      <span class="chip">C++</span>
+      <span class="chip">Qt</span>
+      <span class="chip">HTTP/HTTPS</span>
+      <span class="chip">BitTorrent</span>
+      <span class="chip">Windows</span>
     </div>
   </div>
 
-  <!-- Footer -->
-  <footer class="border-t border-flux-border bg-flux-bg0 py-6 text-center text-xs font-mono text-slate-500">
-    <p>Copyright © 2026 FluxBit. All rights reserved.</p>
-  </footer>
+  <div class="blueprint">
+    <div class="flow">
+      <div class="flowbox"><span>URL / MAGNET / TORRENT</span><small>INPUT</small></div>
+      <div class="arrow">↓</div>
+      <div class="flowbox"><span>PROBE + RESOLVE</span><small>LINK</small></div>
+      <div class="arrow">↓</div>
+      <div class="flowbox"><span>SEGMENTS / PEERS</span><small>PARALLEL</small></div>
+      <div class="arrow">↓</div>
+      <div class="flowbox"><span>TRANSFER</span><small>ASYNC</small></div>
+      <div class="arrow">↓</div>
+      <div class="flowbox"><span>DONE → SAVE STATE</span><small>RESUMABLE</small></div>
+    </div>
+  </div>
+</div>
+</section>
 
-  <script>
-    // Downloads extension zip and opens guide modal
-    function downloadExtensionModal() {
-      const link = document.createElement("a");
-      link.href = "https://github.com/Sadik084/FluxBit/releases/download/v4.0.0/fluxbit-extension.zip";
-      link.download = "fluxbit-extension.zip";
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+<section class="section">
+<div class="wrap">
+  <div class="download-band">
+    <div>
+      <div class="eyebrow">FluxBit v4.0.0</div>
+      <h2>Put your bandwidth<br>to work.</h2>
+      <p>Download FluxBit for Windows and keep your transfers under control.</p>
+    </div>
 
-      const modal = document.getElementById('extension-modal');
-      const card = document.getElementById('modal-card');
-      modal.classList.remove('hidden');
-      setTimeout(() => {
-        modal.classList.remove('opacity-0');
-        card.classList.remove('scale-95');
-        card.classList.add('scale-100');
-      }, 20);
-    }
+    <div class="actions">
+      <a class="btn js-download" href="#">GET FLUXBIT ↓</a>
+      <a class="btn secondary js-release" href="#">RELEASE ↗</a>
+    </div>
+  </div>
+</div>
+</section>
 
-    function closeModal() {
-      const modal = document.getElementById('extension-modal');
-      const card = document.getElementById('modal-card');
-      modal.classList.add('opacity-0');
-      card.classList.remove('scale-100');
-      card.classList.add('scale-95');
-      setTimeout(() => {
-        modal.classList.add('hidden');
-      }, 200);
-    }
+<section id="install" class="section">
+<div class="wrap install">
+  <div>
+    <div class="eyebrow">Browser companion</div>
+    <h2>Grab links<br>from your browser.</h2>
+    <p class="section-intro">
+      Use the companion extension to pass supported download links into FluxBit.
+    </p>
+    <div class="actions">
+      <a class="btn secondary js-extension" href="#">↓ GET EXTENSION</a>
+    </div>
+  </div>
 
-    // App Demo interactive handlers
-    let isPaused = false;
-    function toggleV4Pause() {
-      isPaused = !isPaused;
-      const pauseBtn = document.getElementById('v4-pause-btn');
-      const meta = document.getElementById('v4-meta');
-      const statusSpeed = document.getElementById('status-widget-speed');
+  <div class="steps">
+    <div class="step">
+      <div class="num">01</div>
+      <div><h3>Install FluxBit</h3><p>Download and install the desktop application.</p></div>
+    </div>
 
-      if (isPaused) {
-        pauseBtn.innerText = "Resume";
-        meta.innerText = "8.6 MB / 1.0 GB • Paused • 0 conn";
-        statusSpeed.innerText = "↓ 0.0 MB/s (Paused)";
-      } else {
-        pauseBtn.innerText = "Pause";
-        meta.innerText = "8.6 MB / 1.0 GB • 117 MB/s • ETA 8s • 2 conn";
-        statusSpeed.innerText = "↓ 117 MB/s";
-      }
-    }
+    <div class="step">
+      <div class="num">02</div>
+      <div><h3>Install the companion extension</h3><p>Install the extension package supplied with your FluxBit release.</p></div>
+    </div>
 
-    function cancelV4Task() {
-      const meta = document.getElementById('v4-meta');
-      meta.innerText = "Download canceled by user.";
-    }
+    <div class="step">
+      <div class="num">03</div>
+      <div><h3>Send a link</h3><p>Hand a supported download URL to FluxBit and let the desktop application take over.</p></div>
+    </div>
+  </div>
+</div>
+</section>
 
-    function removeV4Task() {
-      const card = document.getElementById('task-card-1');
-      if (card) {
-        card.style.opacity = '0.3';
-        setTimeout(() => {
-          card.style.display = 'none';
-        }, 300);
-      }
-    }
+</main>
 
-    function switchCategory(cat) {
-      const categories = ['all', 'active', 'queued', 'completed', 'torrents'];
-      categories.forEach(c => {
-        const btn = document.getElementById(`cat-${c}`);
-        if (c === cat) {
-          btn.className = "w-full text-left px-3 py-2 rounded-lg font-medium bg-blue-600 text-white flex items-center justify-between transition-all";
-        } else {
-          btn.className = "w-full text-left px-3 py-2 rounded-lg font-medium text-slate-400 hover:text-white hover:bg-flux-bg2 flex items-center justify-between transition-all";
-        }
-      });
-    }
+<footer class="wrap">
+  <span>© 2026 FluxBit · Fast, lightweight, precise.</span>
+  <span>Windows Download Manager</span>
+</footer>
 
-    function promptAddLink() {
-      const url = prompt("Enter file URL to download:", "https://sin-speed.hetzner.com/100MB.bin");
-      if (url) {
-        alert("Added download task for: " + url);
-      }
-    }
+<script>
+document.addEventListener("contextmenu", event => event.preventDefault());
+document.addEventListener("selectstart", event => event.preventDefault());
+document.addEventListener("dragstart", event => event.preventDefault());
+document.querySelectorAll("a, button, .button, [role=button]").forEach(el => {
+  el.style.cursor = 'url("data:image/svg+xml,%3Csvg xmlns=\"http://www.w3.org/2000/svg\" width=\"30\" height=\"30\" viewBox=\"0 0 30 30\"%3E%3Cpath d=\"M8 4h13v8h3a3 3 0 013 3v7a4 4 0 01-4 4H12a4 4 0 01-4-4V4z\" fill=\"%23111a2e\" stroke=\"%23f8fafc\" stroke-width=\"2\"/%3E%3Cpath d=\"M11 7h7M11 11h7\" stroke=\"%233b82f6\" stroke-width=\"2\" stroke-linecap=\"round\"/%3E%3C/svg%3E") 8 8, pointer';
+});
 
-    function openSettingsDemo() {
-      alert("FluxBit Settings: You can download the Chrome extension directly from the settings panel in v4.0.0.");
-    }
-  </script>
+document.querySelectorAll(".js-download").forEach(el => {
+  if (FLUXBIT_LINKS.download) el.href = FLUXBIT_LINKS.download;
+  else el.style.display = "none";
+});
+
+document.querySelectorAll(".js-release").forEach(el => {
+  if (FLUXBIT_LINKS.release) el.href = FLUXBIT_LINKS.release;
+  else el.style.display = "none";
+});
+
+document.querySelectorAll(".js-extension").forEach(el => {
+  if (FLUXBIT_LINKS.extension) el.href = FLUXBIT_LINKS.extension;
+  else el.style.display = "none";
+});
+</script>
+
 </body>
 </html>
